@@ -22,7 +22,7 @@ jobs:
       - name: Create Kind Cluster
         uses: helm/kind-action@v1.5.0
         with:
-          config: kind-config.yaml
+          config: tme_cicd/kind-config.yaml
           cluster_name: kind-cluster
 
       - name: Load Docker Image to Kind Cluster
@@ -39,9 +39,9 @@ jobs:
           
       - name: Deploy Application
         run: |
-          kubectl apply -f deployment.yaml
-          kubectl apply -f service.yaml
-          kubectl apply -f ingress.yaml
+          kubectl apply -f tme_cicd/deployment.yaml
+          kubectl apply -f tme_cicd/service.yaml
+          kubectl apply -f tme_cicd/ingress.yaml
           
       - name: Wait for Deployment to Complete
         run: |
