@@ -1,55 +1,55 @@
-# Kubernetes 部署示例
+# Kubernetes deployment
 
-这是一个简单的Node.js应用程序，展示了如何使用Docker容器化应用并通过Kubernetes进行部署。
+This is a simple Node.js application that demonstrates how to containerize an application and deploy it through Kubernetes.
 
-## 第1部分：应用容器化
+## Part 1: Containerization of the application
 
-### 构建和推送Docker镜像
+### Building and pushing the Docker image
 
 ```bash
-# 构建Docker镜像
+# Build the Docker image
 docker build -t yourusername/hello-world-node .
 
-# 推送到Docker Hub（需要先登录）
+# Push to Docker Hub (need to login first)
 docker login
 docker push yourusername/hello-world-node
 ```
 
-### 使用Docker Compose运行
+### Running with Docker Compose
 
 ```bash
 docker-compose up
 ```
 
-## 第2部分：使用Kubernetes部署
+## Part 2: Deploying with Kubernetes
 
-### 创建部署
+### Creating the deployment
 
 ```bash
 kubectl apply -f k8s-deployment.yaml
 ```
 
-### 暴露服务
+### Exposing the service
 
 ```bash
 kubectl apply -f k8s-service.yaml
 ```
 
-## 第3部分：扩展和更新
+## Part 3: Scaling and updating
 
-### 扩展应用
+### Scaling the application
 
 ```bash
 kubectl scale deployment hello-world-node --replicas=3
 ```
 
-### 更新应用
+### Updating the application
 
 ```bash
 kubectl set image deployment/hello-world-node hello-world-node=yourusername/hello-world-node:new_version
 ```
 
-## 第4部分：清理资源
+## Part 4: Cleaning up resources
 
 ```bash
 kubectl delete deployment hello-world-node

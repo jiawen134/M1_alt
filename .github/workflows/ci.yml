@@ -56,4 +56,4 @@ jobs:
       - name: Display Access Information
         run: |
           echo "The application has been successfully deployed to the Kind cluster"
-          echo "It can be accessed at http://localhost:3000"   
+          echo "It can be accessed at http://localhost:80"   
