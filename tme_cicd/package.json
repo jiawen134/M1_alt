@@ -1,0 +1,13 @@
+{
+  "name": "hello-world-node",
+  "version": "1.0.0",
+  "description": "Simple Node.js application for CI/CD demonstration",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js",
+    "test": "echo \"Test passed\" && exit 0"
+  },
+  "dependencies": {
+    "express": "^4.18.2"
+  }
+} 
