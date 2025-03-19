@@ -15,4 +15,4 @@ nodes:
   - containerPort: 443
     hostPort: 3443
     protocol: TCP
-- role: worker 
+- role: worker  
