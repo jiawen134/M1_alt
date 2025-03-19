@@ -1,0 +1,59 @@
+name: CI/CD Pipeline with Kind
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        name: checkout
+
+      - name: Docker Hub Login
+        run: echo ${{ secrets.DOCKER_PASSWORD }} | docker login -u ${{ secrets.DOCKER_USERNAME }} --password-stdin
+          
+      - name: Pull Docker Hub Image
+        run: |
+          docker pull jarvan146/hello-world-node:latest
+
+      - name: Create Kind Cluster
+        uses: helm/kind-action@v1.5.0
+        with:
+          config: tme_cicd/kind-config.yaml
+          cluster_name: kind-cluster
+
+      - name: Load Docker Image to Kind Cluster
+        run: |
+          kind load docker-image jarvan146/hello-world-node:latest --name kind-cluster
+          
+      - name: Install NGINX Ingress Controller
+        run: |
+          kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/main/deploy/static/provider/kind/deploy.yaml
+          kubectl wait --namespace ingress-nginx \
+            --for=condition=ready pod \
+            --selector=app.kubernetes.io/component=controller \
+            --timeout=90s
+          
+      - name: Deploy Application
+        run: |
+          kubectl apply -f tme_cicd/deployment.yaml
+          kubectl apply -f tme_cicd/service.yaml
+          kubectl apply -f tme_cicd/ingress.yaml
+          
+      - name: Wait for Deployment to Complete
+        run: |
+          kubectl wait --for=condition=available --timeout=300s deployment/hello-world-node
+          
+      - name: Verify Application Access
+        run: |
+          # wait for Ingress to be ready
+          sleep 30
+          curl -v localhost:3000
+          
+      - name: Display Access Information
+        run: |
+          echo "The application has been successfully deployed to the Kind cluster"
+          echo "It can be accessed at http://localhost:3000"   
